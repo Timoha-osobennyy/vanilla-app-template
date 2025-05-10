@@ -1,4 +1,8 @@
+import throttle from 'lodash.throttle';
+
 const form = document.querySelector('.feedback-form');
+if (!form) return;
+
 const emailInput = form.querySelector('input[name="email"]');
 const messageInput = form.querySelector('textarea[name="message"]');
 
@@ -38,23 +42,14 @@ function onFormSubmit(event) {
 function populateForm() {
   const savedData = localStorage.getItem(STORAGE_KEY);
   if (savedData) {
-    const { email, message } = JSON.parse(savedData);
-    emailInput.value = email;
-    messageInput.value = message;
-    formData.email = email;
-    formData.message = message;
+    try {
+      const { email, message } = JSON.parse(savedData);
+      emailInput.value = email || '';
+      messageInput.value = message || '';
+      formData.email = email || '';
+      formData.message = message || '';
+    } catch (e) {
+      console.error('Помилка при зчитуванні з localStorage', e);
+    }
   }
 }
-
-function throttle(callback, delay) {
-  let lastCall = 0;
-  return function (...args) {
-    const now = new Date().getTime();
-    if (now - lastCall >= delay) {
-      callback(...args);
-      lastCall = now;
-    }
-  };
-}
-
-import throttle from 'lodash.throttle';

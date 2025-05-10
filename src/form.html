@@ -9,24 +9,44 @@
 </head>
 
 <body>
-    <load src="./partials/header.html" />
+   
+    <header></header>
 
     <main>
         <form class="feedback-form" autocomplete="off">
-            <label>
+            <label for="email">
                 Email
-                <input type="email" name="email" autofocus />
+                <input type="email" id="email" name="email" autofocus required />
             </label>
-            <label>
+            <label for="message">
                 Message
-                <textarea name="message" rows="8"></textarea>
+                <textarea id="message" name="message" rows="8" required></textarea>
             </label>
             <button type="submit">Send</button>
         </form>
     </main>
 
-    <load src="./partials/footer.html" />
-    <script src="src/form.js" type="module"></script>
+    <footer></footer>
+
+    <script type="module" src="src/form.js"></script>
+    <script>
+
+        async function loadPartial(selector, url) {
+            const element = document.querySelector(selector);
+            if (element) {
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('Ошибка загрузки: ' + url);
+                    element.innerHTML = await response.text();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        }
+
+        loadPartial('header', './partials/header.html');
+        loadPartial('footer', './partials/footer.html');
+    </script>
 </body>
 
 </html>
